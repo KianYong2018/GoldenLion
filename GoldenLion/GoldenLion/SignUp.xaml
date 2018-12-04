@@ -4,9 +4,15 @@
              x:Class="GoldenLion.SignUp">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Label Text="Name" />
+            <Entry x:Name="EntryName" Placeholder="Name" />
+            <Label Text="Username" />
+            <Entry x:Name="EntryUsername" Placeholder="Username"/>
+            <Label Text="Password" />
+            <Entry x:Name="EntryPassword" Placeholder="Password"/>
+            <Label Text="Role"/>
+            <Entry x:Name="EntryRole" Placeholder="Admin/CIC/Member"/>
+            <Button x:Name="Button" Text="Sign Up" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
