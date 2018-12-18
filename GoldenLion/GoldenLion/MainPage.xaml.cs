@@ -30,7 +30,7 @@ namespace GoldenLion
 
         async void ButtonSignUp_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new SignUp());
+            await Navigation.PushAsync(new TodoList()); //Go to SignUp.xaml
         }
     }
 }
