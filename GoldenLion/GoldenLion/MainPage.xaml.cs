@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GoldenLion.Entity;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,28 +11,35 @@ namespace GoldenLion
 {
     public partial class MainPage : ContentPage
     {
+        UserAccountManager userAccountManager;
         public MainPage()
         {
             InitializeComponent();
             var entry = new Entry { Placeholder = "Username", PlaceholderColor = Color.Olive };
+            userAccountManager = UserAccountManager.DefaultUserAccount;
 
         }
 
-        private void ButtonEntry_Clicked(object sender, EventArgs e)
+        private async void ButtonEntry_Clicked(object sender, EventArgs e)
         {
-            if(EntryUsername.Text != null && EntryPassword.Text != null)
+            if(!String.IsNullOrWhiteSpace(EntryUsername.Text) && EntryPassword.Text != null)
             {
                 LabelToast.Text = "Logining in. Please wait";
             }
             else
             {
-                LabelToast.Text = "Do not leave any blanks";
+                await DisplayAlert("Alert","Incorrect Password or Username","Okay");
             }
         }
 
         async void ButtonSignUp_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new TodoList()); //Go to SignUp.xaml
+            await Navigation.PushAsync(new SignUp()); //Go to SignUp.xaml
+        }
+
+        async void ButtonTestAttendancePage_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AttendancePage());
         }
     }
 }

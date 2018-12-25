@@ -2,7 +2,7 @@
 using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json;
 
-namespace GoldenLion
+namespace GoldenLion.Entity
 {
 	public class TodoItem
 	{

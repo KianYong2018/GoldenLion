@@ -1,21 +1,21 @@
-/*
+﻿/*
  * To add Offline Sync Support:
- *  1) Add the NuGet package Microsoft.Azure.Mobile.Client.SQLiteStore (and dependencies) to all client projects
- *  2) Uncomment the #define OFFLINE_SYNC_ENABLED
- *
+ * 1) Add the NuGet package Microsoft.Azure.Mobile.Client.SQLiteStore (and dependencies) to all client projects
+ * 2) Uncomment the #define OFFLINE_SYNC_ENABLED
+ * 
  * For more information, see: http://go.microsoft.com/fwlink/?LinkId=620342
  */
-//#define OFFLINE_SYNC_ENABLED
+ //#define OFFLINE_SYNC_ENABLED
 
+using GoldenLion.Entity;
+using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using GoldenLion.Entity;
-using Microsoft.WindowsAzure.MobileServices;
 
 #if OFFLINE_SYNC_ENABLED
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
@@ -24,37 +24,37 @@ using Microsoft.WindowsAzure.MobileServices.Sync;
 
 namespace GoldenLion
 {
-    public partial class TodoItemManager
+    public partial class UserAccountManager
     {
-        static TodoItemManager defaultInstance = new TodoItemManager();
+        static UserAccountManager defaultInstance = new UserAccountManager();
         MobileServiceClient client;
 
 #if OFFLINE_SYNC_ENABLED
-        IMobileServiceSyncTable<TodoItem> todoTable;
+        IMobileServiceSyncTable<UserAccount> userAccount;
 #else
-        IMobileServiceTable<TodoItem> todoTable;
+        IMobileServiceTable<UserAccount> userAccount;
 #endif
 
         const string offlineDbPath = @"localstore.db";
 
-        private TodoItemManager()
+        private UserAccountManager()
         {
             this.client = new MobileServiceClient(Constant.ApplicationURL);
 
 #if OFFLINE_SYNC_ENABLED
             var store = new MobileServiceSQLiteStore(offlineDbPath);
-            store.DefineTable<TodoItem>();
+            store.DefineTable<UserAccount>();
 
             //Initializes the SyncContext using the default IMobileServiceSyncHandler.
             this.client.SyncContext.InitializeAsync(store);
 
-            this.todoTable = client.GetSyncTable<TodoItem>();
+            this.userAccount = client.GetSyncTable<UserAccount>();
 #else
-            this.todoTable = client.GetTable<TodoItem>();
+            this.userAccount = client.GetTable<UserAccount>();
 #endif
         }
 
-        public static TodoItemManager DefaultManager
+        public static UserAccountManager DefaultUserAccount
         {
             get
             {
@@ -73,10 +73,10 @@ namespace GoldenLion
 
         public bool IsOfflineEnabled
         {
-            get { return todoTable is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<TodoItem>; }
+            get { return userAccount is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<UserAccount>; }
         }
 
-        public async Task<ObservableCollection<TodoItem>> GetTodoItemsAsync(bool syncItems = false)
+        public async Task<ObservableCollection<UserAccount>> GetUserAccountAsync(bool syncItems = false)
         {
             try
             {
@@ -86,11 +86,12 @@ namespace GoldenLion
                     await this.SyncAsync();
                 }
 #endif
-                IEnumerable<TodoItem> items = await todoTable
-                    .Where(todoItem => !todoItem.Done)
+                IEnumerable<UserAccount> items = await userAccount
+                    .Where(userAccount => !userAccount.Deleted)
                     .ToEnumerableAsync();
 
-                return new ObservableCollection<TodoItem>(items);
+
+                return new ObservableCollection<UserAccount>(items);
             }
             catch (MobileServiceInvalidOperationException msioe)
             {
@@ -102,18 +103,18 @@ namespace GoldenLion
             }
             return null;
         }
-
-        public async Task SaveTaskAsync(TodoItem item)
+        
+        public async Task SaveTaskAsync(UserAccount item)
         {
             try
             {
-                if (item.Id == null)
+                if (String.IsNullOrEmpty(item.IdUserAccount))
                 {
-                    await todoTable.InsertAsync(item);
+                    await userAccount.InsertAsync(item);
                 }
                 else
                 {
-                    await todoTable.UpdateAsync(item);
+                    await userAccount.UpdateAsync(item);
                 }
             }
             catch (Exception e)
@@ -129,40 +130,40 @@ namespace GoldenLion
 
             try
             {
-                await this.client.SyncContext.PushAsync();
+                    await this.client.SyncContext.PushAsync();
 
-                await this.todoTable.PullAsync(
-                    //The first parameter is a query name that is used internally by the client SDK to implement incremental sync.
-                    //Use a different query name for each unique query in your program
-                    "allTodoItems",
-                    this.todoTable.CreateQuery());
-            }
+                    await this.todoTable.PullAsync(
+                        //The first parameter is a query name that is used internally by the client SDK to implement incremental sync.
+                        //Use a different query name for each unique query in your program
+                        "allTodoItems",
+                        this.todoTable.CreateQuery());
+                }
             catch (MobileServicePushFailedException exc)
             {
-                if (exc.PushResult != null)
+                if(exc.PushResult != null)
                 {
                     syncErrors = exc.PushResult.Errors;
                 }
             }
-
-            // Simple error/conflict handling. A real application would handle the various errors like network conditions,
+            
+            // Simple error/conflict handing. A real application would handle the various errors like network conditions,
             // server conflicts and others via the IMobileServiceSyncHandler.
             if (syncErrors != null)
             {
                 foreach (var error in syncErrors)
                 {
-                    if (error.OperationKind == MobileServiceTableOperationKind.Update && error.Result != null)
+                    if(error.OperationKind == MobileServiceTableOperationKind.Update && error.Result != null)
                     {
                         //Update failed, reverting to server's copy.
                         await error.CancelAndUpdateItemAsync(error.Result);
                     }
                     else
                     {
-                        // Discard local change.
+                        //Discord local change.
                         await error.CancelAndDiscardItemAsync();
                     }
 
-                    Debug.WriteLine(@"Error executing sync operation. Item: {0} ({1}). Operation discarded.", error.TableName, error.Item["id"]);
+                    Debug.WriteLine(@"Error executing sync operation. Item: {0} ({1}). Operation discarded.", error.TableName, error.Item["idUserAccount"]);
                 }
             }
         }

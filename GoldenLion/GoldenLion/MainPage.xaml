@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:GoldenLion"
              x:Class="GoldenLion.MainPage" Title="Welcome To Golden Lion App">
-
     <StackLayout>
         <!-- Place new controls here -->
-        <Label Text="Username"/>
+        <Label Text="Username" />
         <Entry x:Name="EntryUsername" Placeholder="Username"/>
         <Label Text="Password"/>
-        <Entry x:Name="EntryPassword" Placeholder="Password" IsPassword="True" />
+        <Entry x:Name="EntryPassword" Placeholder="Password" IsPassword="True"/>
         <Button x:Name="ButtonEntry" Text="Login" Clicked="ButtonEntry_Clicked"/>
         <Button x:Name="ButtonSignUp" Text="Sign Up" Clicked="ButtonSignUp_Clicked"/>
         <Label x:Name="LabelToast"/>
+        <Button x:Name="ButtonTestAttendancePage" Text="Attendance Page" Clicked="ButtonTestAttendancePage_Clicked"/>
     </StackLayout>
 
 </ContentPage>
