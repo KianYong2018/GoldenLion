@@ -38,11 +38,10 @@ namespace GoldenLion
         {
             var todo = new UserAccount { Name = EntryName.Text, Username = EntryUsername.Text, Password = EntryPassword.Text, Role = EntryRole.Text};
             await AddAccount(todo);
-
-            //EntryName.Text = string.Empty;
-            //EntryUsername.Text = string.Empty;
-            //EntryPassword.Text = string.Empty;
-            //EntryRole.Text = string.Empty;
+            EntryName.Text = string.Empty;
+            EntryUsername.Text = string.Empty;
+            EntryPassword.Text = string.Empty;
+            EntryRole.Text = string.Empty;
         }
     }
 }

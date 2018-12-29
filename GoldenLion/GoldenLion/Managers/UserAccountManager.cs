@@ -76,7 +76,7 @@ namespace GoldenLion
             get { return userAccount is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<UserAccount>; }
         }
 
-        public async Task<ObservableCollection<UserAccount>> GetUserAccountAsync(bool syncItems = false)
+        public async Task<ObservableCollection<UserAccount>> GetUserAccountAsync(bool syncItems = false, string searchRole = "Members")
         {
             try
             {
@@ -86,11 +86,19 @@ namespace GoldenLion
                     await this.SyncAsync();
                 }
 #endif
-                IEnumerable<UserAccount> items = await userAccount
+                IEnumerable<UserAccount> items;
+                if (string.IsNullOrEmpty(searchRole))
+                {
+                    items = await userAccount
                     .Where(userAccount => !userAccount.Deleted)
                     .ToEnumerableAsync();
-
-
+                }
+                else
+                {
+                    items = await userAccount
+                    .Where(userAccount => !userAccount.Deleted && userAccount.Role == searchRole)
+                    .ToEnumerableAsync();
+                }
                 return new ObservableCollection<UserAccount>(items);
             }
             catch (MobileServiceInvalidOperationException msioe)
@@ -102,6 +110,22 @@ namespace GoldenLion
                 Debug.WriteLine("Sync error: {0}", new[] { e.Message });
             }
             return null;
+        }
+
+        public async Task<bool> CheckUserAccount(string username, string password)
+        {
+            //IEnumerable<UserAccount> When this query is executed, it will produced a sequence of zero or more UserAccount Object
+            IEnumerable<UserAccount> store = await userAccount
+                .Where(userAccount => userAccount.Username == username && userAccount.Password == password)
+                .ToEnumerableAsync();
+
+            if (store.Count() == 0)
+            {
+                return false;
+            }
+            else{
+                return true;
+            }
         }
         
         public async Task SaveTaskAsync(UserAccount item)

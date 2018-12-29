@@ -12,7 +12,19 @@
             <Entry x:Name="EntryPassword" Placeholder="Password" IsPassword="True"/>
             <Label Text="Role"/>
             <Entry x:Name="EntryRole" Placeholder="Admin/CIC/Member"/>
-            <Button x:Name="ButtonSignUp" Text="Sign Up" Clicked="Button_Clicked"/>
+            <Button x:Name="ButtonSignUp" Text="Sign Up" Clicked="Button_Clicked" IsEnabled="False">
+                <Button.Triggers>
+                    <MultiTrigger TargetType="Button">
+                        <MultiTrigger.Conditions>
+                            <BindingCondition Binding="{Binding Source={x:Reference EntryName}, Path=Text.Length, Converter={StaticResource dataHasBeenEntered}}" Value="true"/>
+                            <BindingCondition Binding="{Binding Source={x:Reference EntryPassword}, Path=Text.Length, Converter={StaticResource dataHasBeenEntered}}" Value="true"/>
+                            <BindingCondition Binding="{Binding Source={x:Reference EntryRole}, Path=Text.Length, Converter={StaticResource dataHasBeenEntered}}" Value="true"/>
+                            <BindingCondition Binding="{Binding Source={x:Reference EntryUsername}, Path=Text.Length, Converter={StaticResource dataHasBeenEntered}}" Value="true"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="IsEnabled" Value="True"/>
+                    </MultiTrigger>
+                </Button.Triggers>
+            </Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

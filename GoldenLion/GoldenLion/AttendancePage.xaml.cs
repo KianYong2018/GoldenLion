@@ -25,7 +25,7 @@ namespace GoldenLion
                     HeightRequest = 30
                 };
                 refreshButton.Clicked += OnRefreshItems;
-                //buttonsPanel.Children.Add(refreshButton);
+                buttonsPanels.Children.Add(refreshButton);
                 if (UserAccountManager.IsOfflineEnabled)
                 {
                     var syncButton = new Button
@@ -34,17 +34,12 @@ namespace GoldenLion
                         HeightRequest = 30
                     };
                     syncButton.Clicked += OnSyncItems;
-                    //buttonsPanel.Children.Add(syncButton);
+                    buttonsPanels.Children.Add(syncButton);
                 }
             }
         }
 
         private void ButtonConfirm_Clicked(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void Button_Clicked(object sender, EventArgs e)
         {
 
         }
@@ -71,7 +66,6 @@ namespace GoldenLion
             {
                 list.EndRefresh();
             }
-
             if (error != null)
             {
                 await DisplayAlert("Refresh Error", "Couldn't refresh data (" + error.Message + ")", "OK");
@@ -97,9 +91,15 @@ namespace GoldenLion
         {
             using (var scope = new ActivityIndicatorScope(syncIndicator, showActivityIndicator))
             {
-                todoList.ItemsSource = await UserAccountManager.GetUserAccountAsync(syncItems);
+                todoList.ItemsSource = await UserAccountManager.GetUserAccountAsync(syncItems,null);
             }
+        }
 
+        async void Button_SearchClicked(object sender, EventArgs e)
+        {
+            bool syncItems = false; //This is only Temperory and changed it when I fully understand
+            todoList.ItemsSource = await UserAccountManager.GetUserAccountAsync(syncItems, newItemName.Text);
+            newItemName.Text = string.Empty;
         }
 
         private class ActivityIndicatorScope : IDisposable
