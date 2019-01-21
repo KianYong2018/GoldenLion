@@ -7,5 +7,7 @@ namespace GoldenLion
     public interface ICalendar
     {
         void DisplayCalendar();
+
+        string GetDate();
     }
 }

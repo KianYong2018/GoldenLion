@@ -3160,9 +3160,6 @@ namespace GoldenLion.Droid
 			// aapt resource value: 0x7f090063
 			public const int buttonPanel = 2131296355;
 			
-			// aapt resource value: 0x7f09008c
-			public const int calendarView1 = 2131296396;
-			
 			// aapt resource value: 0x7f0900ba
 			public const int cancel_action = 2131296442;
 			
@@ -3204,6 +3201,9 @@ namespace GoldenLion.Droid
 			
 			// aapt resource value: 0x7f09006c
 			public const int customPanel = 2131296364;
+			
+			// aapt resource value: 0x7f09008c
+			public const int datePicker = 2131296396;
 			
 			// aapt resource value: 0x7f09007a
 			public const int decor_content_parent = 2131296378;

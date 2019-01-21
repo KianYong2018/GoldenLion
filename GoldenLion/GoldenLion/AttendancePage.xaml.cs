@@ -91,14 +91,14 @@ namespace GoldenLion
         {
             using (var scope = new ActivityIndicatorScope(syncIndicator, showActivityIndicator))
             {
-                todoList.ItemsSource = await UserAccountManager.GetUserAccountAsync(syncItems,null);
+                todoList.ItemsSource = await UserAccountManager.GetUserBasedOnRoleAsync(syncItems,null);
             }
         }
 
         async void Button_SearchClicked(object sender, EventArgs e)
         {
             bool syncItems = false; //This is only Temperory and changed it when I fully understand
-            todoList.ItemsSource = await UserAccountManager.GetUserAccountAsync(syncItems, newItemName.Text);
+            todoList.ItemsSource = await UserAccountManager.GetUserBasedOnRoleAsync(syncItems, newItemName.Text);
             newItemName.Text = string.Empty;
         }
 

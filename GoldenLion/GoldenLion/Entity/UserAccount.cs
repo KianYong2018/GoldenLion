@@ -13,6 +13,8 @@ namespace GoldenLion.Entity
         string password;
         string role;
         bool deleted;
+        bool androidIOS;
+        bool uwp;
 
         [JsonProperty(PropertyName = "id")] //This represent the columns in table 'UserAccount'
         public string IdUserAccount
@@ -54,6 +56,20 @@ namespace GoldenLion.Entity
         {
             get { return deleted; }
             set { deleted = value; }
+        }
+
+        [JsonProperty(PropertyName = "AndroidIOS")]
+        public bool AndroidIOS
+        {
+            get { return androidIOS; }
+            set { androidIOS = value; }
+        }
+
+        [JsonProperty(PropertyName = "UWP")]
+        public bool UWP
+        {
+            get { return uwp; }
+            set { uwp = value; }
         }
     }
 }

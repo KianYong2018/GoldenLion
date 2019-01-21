@@ -10,6 +10,7 @@ namespace GoldenLion.Entity
         string id;
         DateTime paymentDate;
         string amount;
+        string userAccountID;
 
         [JsonProperty(PropertyName = "id")]
         public string Id
@@ -30,6 +31,13 @@ namespace GoldenLion.Entity
         {
             get { return amount; }
             set { amount = value; }
+        }
+
+        [JsonProperty(PropertyName = "UserAccount_id")]
+        public string UserAccountID
+        {
+            get { return userAccountID; }
+            set { userAccountID = value; }
         }
     }
 }

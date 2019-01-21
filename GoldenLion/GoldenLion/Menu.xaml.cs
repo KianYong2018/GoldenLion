@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoldenLion.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace GoldenLion
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class Menu : ContentPage
 	{
+        UserAccountManager UserAccountManager = UserAccountManager.DefaultUserAccount;
 		public Menu ()
 		{
 			InitializeComponent ();
@@ -22,14 +24,30 @@ namespace GoldenLion
             await Navigation.PushAsync(new AttendancePage());
         }
 
-        private void ButtonTestPayment_Clicked(object sender, EventArgs e)
+        async void ButtonTestPayment_Clicked(object sender, EventArgs e)
         {
-
+            await Navigation.PushAsync(new PaymentPage());
         }
 
         public void ButtonCalendar_Clicked(object sender, EventArgs e)
         {
-            DependencyService.Get<ICalendar>().DisplayCalendar();
+            DependencyService.Get<ICalendar>().DisplayCalendar(); //Going into Xamarin.Android
+        }
+
+        async void ButtonTestLogout_Clicked(object sender, EventArgs e)
+        {
+            IEnumerable<UserAccount> DeviceType = await UserAccountManager.GetUserAccountAsync(Application.Current.Properties["UserName"].ToString());
+            UserAccount LogoutUser = DeviceType.ElementAtOrDefault(0);
+            if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
+            {
+                LogoutUser.AndroidIOS = false;
+            }
+            else
+            {
+                LogoutUser.UWP = false;
+            }
+            await UserAccountManager.SaveTaskAsync(LogoutUser);
+            await Navigation.PushAsync(new MainPage());
         }
     }
 }

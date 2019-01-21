@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,5 +22,11 @@ namespace GoldenLion.Droid
             var intent = new Intent(Android.App.Application.Context,typeof(CalendarActivity));
             Android.App.Application.Context.StartActivity(intent);
         }
+
+        public string GetDate()
+        {
+            Intent intentReceieved = new Intent();
+            return intentReceieved.GetStringExtra("date");
+        }
     }
-}
+}*/

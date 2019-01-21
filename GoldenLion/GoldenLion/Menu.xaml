@@ -14,6 +14,7 @@
             </StackLayout>
             <Button x:Name="ButtonTakePhoto" Text="Take Photo" />
             <Button x:Name="ButtonCalendar" Text="Calendar" Clicked="ButtonCalendar_Clicked" />
+            <Button x:Name="ButtonTestLogout" Text="Test Logout" Clicked="ButtonTestLogout_Clicked" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

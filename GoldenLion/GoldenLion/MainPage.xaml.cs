@@ -26,8 +26,9 @@ namespace GoldenLion
             if(!String.IsNullOrWhiteSpace(username) && password != null)
             {
                 LabelToast.Text = "Logining in. Please wait";
-                if (await userAccountManager.CheckUserAccount(username, password))
+                if (await userAccountManager.CheckUserAccount(username, password, Device.RuntimePlatform))
                 {
+                    Application.Current.Properties["UserName"] = userAccountManager.GetUserName();
                     await Navigation.PushAsync(new Menu());
                     EntryUsername.Text = string.Empty;
                     EntryPassword.Text = string.Empty;
@@ -35,6 +36,7 @@ namespace GoldenLion
                 }
                 else
                 {
+                    LabelToast.Text = string.Empty;
                     await DisplayAlert("Alert", "Incorrect Password or Username", "Okay");
                 }
             }

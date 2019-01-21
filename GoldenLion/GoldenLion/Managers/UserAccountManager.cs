@@ -26,6 +26,8 @@ namespace GoldenLion
 {
     public partial class UserAccountManager
     {
+        UserAccount Account; //Testing creating a global variable (There could be a better way)
+
         static UserAccountManager defaultInstance = new UserAccountManager();
         MobileServiceClient client;
 
@@ -76,7 +78,7 @@ namespace GoldenLion
             get { return userAccount is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<UserAccount>; }
         }
 
-        public async Task<ObservableCollection<UserAccount>> GetUserAccountAsync(bool syncItems = false, string searchRole = "Members")
+        public async Task<ObservableCollection<UserAccount>> GetUserBasedOnRoleAsync(bool syncItems = false, string searchRole = "Members")
         {
             try
             {
@@ -112,18 +114,54 @@ namespace GoldenLion
             return null;
         }
 
-        public async Task<bool> CheckUserAccount(string username, string password)
+        public async Task<ObservableCollection<UserAccount>> GetUserAccountAsync(string UserName)
+        {
+            try
+            {
+                IEnumerable<UserAccount> Useraccount;
+                Useraccount = await userAccount.Where(userAccount => !userAccount.Deleted && userAccount.Username == UserName).ToEnumerableAsync();
+                return new ObservableCollection<UserAccount>(Useraccount);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Retireve Error: {0}", new[] { e.Message });
+            }
+            return null;
+        }
+
+        public string GetUserName()
+        {
+            return Account.Username;
+        }
+
+        public async Task<bool> CheckUserAccount(string username, string password, string deviceOS)
         {
             //IEnumerable<UserAccount> When this query is executed, it will produced a sequence of zero or more UserAccount Object
             IEnumerable<UserAccount> store = await userAccount
                 .Where(userAccount => userAccount.Username == username && userAccount.Password == password)
                 .ToEnumerableAsync();
-
+            
             if (store.Count() == 0)
             {
-                return false;
+                return false; //User not found
             }
             else{
+                UserAccount check = store.ElementAtOrDefault(0);
+                if (deviceOS.Equals("Android") && check.AndroidIOS == false || deviceOS.Equals("IOS") && check.AndroidIOS == false)
+                {
+                    check.AndroidIOS = true;
+                    await SaveTaskAsync(check);
+
+                }else if(deviceOS.Equals("UWP") && check.UWP == false)
+                {
+                    check.UWP = true;
+                    await SaveTaskAsync(check);
+                }
+                else
+                {
+                    return false;
+                }
+                Account = check;
                 return true;
             }
         }
