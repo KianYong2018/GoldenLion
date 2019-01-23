@@ -1,11 +1,13 @@
-﻿using GoldenLion.Entity;
+﻿using Android.Icu.Util;
+using GoldenLion.Entity;
+using GoldenLion.Managers;
+using GoldenLion.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,25 +17,45 @@ namespace GoldenLion
 	public partial class PaymentPage : ContentPage
 	{
         UserAccountManager userAccountManager;
-        
-        public PaymentPage ()
+        UsersViewModel usersViewModel;
+        CalendarAttendanceManager SaveAttendance;
+
+        public PaymentPage (IEnumerable<UserAccount> usersAccounts)
 		{
+            SaveAttendance = CalendarAttendanceManager.DefaultPayment;
             InitializeComponent();
-
-            BindingContext = new MainPageViewModel();
-
             userAccountManager = UserAccountManager.DefaultUserAccount;
+            usersViewModel = new UsersViewModel(usersAccounts);
+
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            ((MainPageViewModel)BindingContext).OnAppearing();
         }
 
-        async void Button_Clicked(object sender, EventArgs e)
+        private void Button_Clicked(object sender, EventArgs e)
         {
-            listView.ItemsSource = await userAccountManager.GetUserBasedOnRoleAsync(false, null);
+            //IEnumerable<UserAccount> users = await userAccountManager.GetUserBasedOnRoleAsync(false, null);
+            BindingContext = usersViewModel;
+        }
+
+        async void Button_Clicked_1(object sender, EventArgs e)
+        {
+            List<CalendarAttendance> insertMultiplePayment = new List<CalendarAttendance>();
+            CalendarAttendance calendarAttendance = new CalendarAttendance();
+            IEnumerable<UserAccount> test = usersViewModel.GetSelectedUsers();
+            foreach(UserAccount i in test)
+            {
+                calendarAttendance.DateTime = DateTime.Now.ToShortDateString();
+                calendarAttendance.UserAccountID = i.IdUserAccount;
+                insertMultiplePayment.Add(calendarAttendance);
+            }
+
+            foreach(CalendarAttendance a in insertMultiplePayment)
+            {
+                await SaveAttendance.SaveTaskAsync(a);
+            }
         }
     }
 }

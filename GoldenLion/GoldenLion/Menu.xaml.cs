@@ -26,7 +26,8 @@ namespace GoldenLion
 
         async void ButtonTestPayment_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new PaymentPage());
+            IEnumerable<UserAccount> userAccounts = await UserAccountManager.GetUserBasedOnRoleAsync(false, null);
+            await Navigation.PushAsync(new PaymentPage(userAccounts));
         }
 
         public void ButtonCalendar_Clicked(object sender, EventArgs e)
@@ -48,6 +49,11 @@ namespace GoldenLion
             }
             await UserAccountManager.SaveTaskAsync(LogoutUser);
             await Navigation.PushAsync(new MainPage());
+        }
+
+        private void ButtonAttendance_Clicked_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

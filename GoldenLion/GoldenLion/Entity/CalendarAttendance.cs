@@ -7,19 +7,19 @@ namespace GoldenLion.Entity
 {
     public class CalendarAttendance
     {
-        int id;
-        DateTime dateTime;
+        string id;
+        String dateTime;
         string userAccountID; 
 
         [JsonProperty(PropertyName = "id")]
-        public int Id
+        public string Id
         {
             get { return id; }
             set { id = value; }
         }
 
         [JsonProperty(PropertyName = "DateTime")]
-        public DateTime DateTime
+        public String DateTime
         {
             get { return dateTime; }
             set { dateTime = value; }
