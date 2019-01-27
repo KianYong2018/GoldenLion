@@ -51,9 +51,9 @@ namespace GoldenLion
             await Navigation.PushAsync(new MainPage());
         }
 
-        private void ButtonAttendance_Clicked_1(object sender, EventArgs e)
+        async void ButtonDisplay_Clicked(object sender, EventArgs e)
         {
-
+            await Navigation.PushAsync(new Display());
         }
     }
 }

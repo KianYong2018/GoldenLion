@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoldenLion.Display">
+    <ContentPage.Content>
+        <StackLayout>
+            <SearchBar Placeholder="Date or Name" />
+            <ListView x:Name="listViewDisplay">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Name}" Detail="{Binding Date}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button x:Name="ButtonRefresh" Text="Refresh" Clicked="ButtonRefresh_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

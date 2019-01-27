@@ -40,21 +40,21 @@ namespace GoldenLion
             BindingContext = usersViewModel;
         }
 
-        async void Button_Clicked_1(object sender, EventArgs e)
+        async void Button_Clicked_1(object sender, EventArgs e) //This is Button_Clicked_1 event handler
         {
             List<CalendarAttendance> insertMultiplePayment = new List<CalendarAttendance>();
-            CalendarAttendance calendarAttendance = new CalendarAttendance();
             IEnumerable<UserAccount> test = usersViewModel.GetSelectedUsers();
             foreach(UserAccount i in test)
             {
+                CalendarAttendance calendarAttendance = new CalendarAttendance(); 
                 calendarAttendance.DateTime = DateTime.Now.ToShortDateString();
                 calendarAttendance.UserAccountID = i.IdUserAccount;
                 insertMultiplePayment.Add(calendarAttendance);
             }
 
-            foreach(CalendarAttendance a in insertMultiplePayment)
+            foreach (CalendarAttendance i in insertMultiplePayment)
             {
-                await SaveAttendance.SaveTaskAsync(a);
+                await SaveAttendance.SaveTaskAsync(i);
             }
         }
     }

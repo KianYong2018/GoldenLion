@@ -136,33 +136,43 @@ namespace GoldenLion
 
         public async Task<bool> CheckUserAccount(string username, string password, string deviceOS)
         {
-            //IEnumerable<UserAccount> When this query is executed, it will produced a sequence of zero or more UserAccount Object
-            IEnumerable<UserAccount> store = await userAccount
-                .Where(userAccount => userAccount.Username == username && userAccount.Password == password)
-                .ToEnumerableAsync();
-            
-            if (store.Count() == 0)
+            try
             {
-                return false; //User not found
-            }
-            else{
-                UserAccount check = store.ElementAtOrDefault(0);
-                if (deviceOS.Equals("Android") && check.AndroidIOS == false || deviceOS.Equals("IOS") && check.AndroidIOS == false)
-                {
-                    check.AndroidIOS = true;
-                    await SaveTaskAsync(check);
+                //IEnumerable<UserAccount> When this query is executed, it will produced a sequence of zero or more UserAccount Object
+                IEnumerable<UserAccount> store = await userAccount
+                    .Where(userAccount => userAccount.Username == username && userAccount.Password == password)
+                    .ToEnumerableAsync();
 
-                }else if(deviceOS.Equals("UWP") && check.UWP == false)
+                if (store.Count() == 0)
                 {
-                    check.UWP = true;
-                    await SaveTaskAsync(check);
+                    return false; //User not found
                 }
                 else
                 {
-                    return false;
+                    UserAccount check = store.ElementAtOrDefault(0);
+                    if (deviceOS.Equals("Android") && check.AndroidIOS == false || deviceOS.Equals("IOS") && check.AndroidIOS == false)
+                    {
+                        check.AndroidIOS = true;
+                        await SaveTaskAsync(check);
+
+                    }
+                    else if (deviceOS.Equals("UWP") && check.UWP == false)
+                    {
+                        check.UWP = true;
+                        await SaveTaskAsync(check);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    Account = check;
+                    return true;
                 }
-                Account = check;
-                return true;
+            }
+            catch (System.Net.Http.HttpRequestException e)
+            {
+                Debug.WriteLine("Request Error: " + e);
+                return false;
             }
         }
         

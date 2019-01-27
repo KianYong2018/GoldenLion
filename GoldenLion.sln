@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoldenLion.iOS", "GoldenLio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoldenLion.UWP", "GoldenLion\GoldenLion.UWP\GoldenLion.UWP.csproj", "{E5967856-0649-48B1-9ED0-95CEB004A900}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoldenLion", "GoldenLion\GoldenLion\GoldenLion.csproj", "{65E3937D-87AD-4D73-B4A3-5F2AC59A4136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoldenLion", "GoldenLion\GoldenLion\GoldenLion.csproj", "{65E3937D-87AD-4D73-B4A3-5F2AC59A4136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

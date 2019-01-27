@@ -2,7 +2,9 @@
 using Microsoft.WindowsAzure.MobileServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +19,8 @@ namespace GoldenLion.Managers
         IMobileServiceSyncTable<CalendarAttendance> calendarAttendance;
 #else
         IMobileServiceTable<CalendarAttendance> calendarAttendance;
+
+        IMobileServiceTable<UserAccount> userAccount; //Testing
 #endif
 
         const string offlineDbPath = @"localstore.db";
@@ -80,6 +84,64 @@ namespace GoldenLion.Managers
                     Debug.WriteLine("Inner Exception: {0}", new[] { e.InnerException });
                 }
             }
+        }
+
+        public async Task<ObservableCollection<CalendarAttendance>> GetCalendarAttendance()
+        {
+            try
+            {
+                IEnumerable<CalendarAttendance> items;
+                items = await calendarAttendance.Where(calendarAttendance => !calendarAttendance.Deleted)
+                    .ToEnumerableAsync();
+                return new ObservableCollection<CalendarAttendance>(items);
+            }catch(Exception e)
+            {
+                Debug.WriteLine("Retrieve Error: " + e);
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<UserAccount>> GetNameAndDate() //Testing this out 
+        {
+            try
+            {//IMobileServiceTable currently does not support join and 
+             //can only query one table at a time
+                List<UserAccount> users = new List<UserAccount>();
+                List<CalendarAttendance> calendars = new List<CalendarAttendance>();
+                calendars = await calendarAttendance.Where(calendarAttendance =>
+                !calendarAttendance.Deleted).ToListAsync();
+
+                userAccount = client.GetTable<UserAccount>();
+
+                users = await userAccount.Where(userAccount => !userAccount.Deleted)
+                    .ToListAsync();
+
+                var query = from user in users join calendar in calendars on
+                            user.IdUserAccount equals calendar.UserAccountID
+                            where user.IdUserAccount == calendar.UserAccountID
+                            select user;
+                return new ObservableCollection<UserAccount>(query);
+            }
+            catch(Exception e)
+            {
+                Debug.WriteLine("Statement Error: " + e);
+                return null;
+            }
+        }
+
+        public async Task<ObservableCollection<CalendarAttendance>> GetCalendarAttendances()
+        {
+            try
+            {
+                IEnumerable<CalendarAttendance> Attendances;
+                Attendances = await calendarAttendance.Where(calendarAttendance => !calendarAttendance.Deleted)
+                    .ToEnumerableAsync();
+                return new ObservableCollection<CalendarAttendance>(Attendances);
+            }catch(Exception e)
+            {
+                Debug.WriteLine("Retrieve Error: {0}", new[] { e.Message });
+            }
+            return null;
         }
 
 #if OFFLINE_SYNC_ENABLED
