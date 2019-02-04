@@ -42,7 +42,7 @@ namespace GoldenLion.Managers
 #endif
         }
 
-        public static CalendarAttendanceManager DefaultPayment
+        public static CalendarAttendanceManager DefaultCalendarAttendance
         {
             get
             {
@@ -86,6 +86,44 @@ namespace GoldenLion.Managers
             }
         }
 
+        //This method can be improved, need to think of a better way
+        public async Task<Boolean> CheckAndSave (List<CalendarAttendance> attendances) //This is to prevent checking users again in the same date
+        {
+            try
+            {
+                bool verify = true;
+                foreach (CalendarAttendance i in attendances)
+                {
+                    IEnumerable<CalendarAttendance> check;
+                    check = await calendarAttendance.Where
+                        (calendarAttendance => calendarAttendance.DateTime == i.DateTime 
+                        && calendarAttendance.UserAccountID == i.UserAccountID).ToEnumerableAsync();
+                    if (check.Count() != 0) //Means that it has been saved before. Return to tell them to check
+                    {
+                        verify = false;
+                        return verify;
+                    }
+                }
+                foreach(CalendarAttendance a in attendances)
+                {
+                    if (verify == true)
+                    {
+                        await SaveTaskAsync(a);
+                    }
+                }
+                return verify;
+            }
+            catch (Exception e)
+            {
+                if(e.InnerException != null)
+                {
+                    Debug.WriteLine("Inner Exception: " + e.InnerException);
+                }
+                Debug.WriteLine("Error: " + e);
+                return false;
+            }
+        }
+
         public async Task<ObservableCollection<CalendarAttendance>> GetCalendarAttendance()
         {
             try
@@ -101,7 +139,7 @@ namespace GoldenLion.Managers
             return null;
         }
 
-        public async Task<ObservableCollection<UserAccount>> GetNameAndDate() //Testing this out 
+        public async Task<ObservableCollection<UserAccount>> GetNameAndDate()
         {
             try
             {//IMobileServiceTable currently does not support join and 

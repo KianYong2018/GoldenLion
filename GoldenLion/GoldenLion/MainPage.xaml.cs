@@ -23,23 +23,26 @@ namespace GoldenLion
         {
             string username = EntryUsername.Text;
             string password = EntryPassword.Text;
-            if(!String.IsNullOrWhiteSpace(username) && password != null)
+            ButtonEntry.IsEnabled = false;
+            LabelToast.Text = "Logining in. Please wait";
+            if (await userAccountManager.CheckUserAccount(username, password, Device.RuntimePlatform))
             {
-                LabelToast.Text = "Logining in. Please wait";
-                if (await userAccountManager.CheckUserAccount(username, password, Device.RuntimePlatform))
-                {
-                    Application.Current.Properties["UserName"] = userAccountManager.GetUserName();
-                    await Navigation.PushAsync(new Menu());
-                    EntryUsername.Text = string.Empty;
-                    EntryPassword.Text = string.Empty;
-                    LabelToast.Text = string.Empty;
-                }
-                else
-                {
-                    LabelToast.Text = string.Empty;
-                    await DisplayAlert("Alert", "Incorrect Password or Username", "Okay");
-                }
+                Application.Current.Properties["UserName"] = userAccountManager.GetUserName();
+                await Navigation.PushAsync(new Menu());
+                ClearEntry();
             }
+            else
+            {
+                ClearEntry();
+                await DisplayAlert("Alert", "Incorrect Password or Username", "Okay");
+            }
+        }
+
+        private void ClearEntry()
+        {
+            EntryUsername.Text = string.Empty;
+            EntryPassword.Text = string.Empty;
+            LabelToast.Text = string.Empty;
         }
 
         async void ButtonSignUp_Clicked(object sender, EventArgs e)

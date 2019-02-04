@@ -34,8 +34,9 @@ namespace GoldenLion
             await manager.SaveTaskAsync(userAccount);
         }
 
-        public async void Button_Clicked(object sender, EventArgs e)
+        public async void Button_SignUp(object sender, EventArgs e)
         {
+            ButtonSignUp.IsEnabled = false;
             var todo = new UserAccount { Name = EntryName.Text, Username = EntryUsername.Text, Password = EntryPassword.Text, Role = EntryRole.Text};
             await AddAccount(todo);
             EntryName.Text = string.Empty;

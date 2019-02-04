@@ -20,13 +20,11 @@ namespace GoldenLion
         UsersViewModel usersViewModel;
         CalendarAttendanceManager SaveAttendance;
 
-        public PaymentPage (IEnumerable<UserAccount> usersAccounts)
+        public PaymentPage ()
 		{
-            SaveAttendance = CalendarAttendanceManager.DefaultPayment;
+            SaveAttendance = CalendarAttendanceManager.DefaultCalendarAttendance;
             InitializeComponent();
             userAccountManager = UserAccountManager.DefaultUserAccount;
-            usersViewModel = new UsersViewModel(usersAccounts);
-
         }
 
         protected override void OnAppearing()
@@ -34,13 +32,14 @@ namespace GoldenLion
             base.OnAppearing();
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        async void Button_Clicked(object sender, EventArgs e)
         {
-            //IEnumerable<UserAccount> users = await userAccountManager.GetUserBasedOnRoleAsync(false, null);
+            IEnumerable<UserAccount> usersAccounts = await userAccountManager.GetUserBasedOnRoleAsync(false, null);
+            usersViewModel = new UsersViewModel(usersAccounts);
             BindingContext = usersViewModel;
         }
 
-        async void Button_Clicked_1(object sender, EventArgs e) //This is Button_Clicked_1 event handler
+        async void Button_Marked(object sender, EventArgs e) //This is Button_Clicked_1 event handler
         {
             List<CalendarAttendance> insertMultiplePayment = new List<CalendarAttendance>();
             IEnumerable<UserAccount> test = usersViewModel.GetSelectedUsers();
@@ -51,10 +50,21 @@ namespace GoldenLion
                 calendarAttendance.UserAccountID = i.IdUserAccount;
                 insertMultiplePayment.Add(calendarAttendance);
             }
-
-            foreach (CalendarAttendance i in insertMultiplePayment)
+            if(await SaveAttendance.CheckAndSave(insertMultiplePayment) == false)
             {
-                await SaveAttendance.SaveTaskAsync(i);
+                await DisplayAlert("Alert", "Not Save. You have duplicate attendance marked already. Please check", "Okay");
+            }
+            else
+            {
+                var result = await DisplayAlert("Success", "Attendance has been successfully marked.", "Yes", "No");
+                if(result == true)
+                {
+                    await Navigation.PushAsync(new Display());
+                }
+                else
+                {
+                    await Navigation.PopAsync();
+                }
             }
         }
     }

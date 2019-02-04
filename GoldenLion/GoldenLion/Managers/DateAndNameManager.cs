@@ -12,12 +12,13 @@ namespace GoldenLion.Managers
     {
         CalendarAttendanceManager CalendarAttendance;
         UserAccountManager UserAccountManager;
+
+        //This can be improved for better efficiently
         public async Task<ObservableCollection<DateAndName>> DisplayNameAndDate ()
         {
-            CalendarAttendance = CalendarAttendanceManager.DefaultPayment;
+            CalendarAttendance = CalendarAttendanceManager.DefaultCalendarAttendance;
             UserAccountManager = UserAccountManager.DefaultUserAccount;
 
-            //The line below has some errors.
             IEnumerable<UserAccount> u = await UserAccountManager.GetUserBasedOnRoleAsync(false, null);
             List<UserAccount> users = new List<UserAccount>(u);
 
@@ -40,6 +41,13 @@ namespace GoldenLion.Managers
                 dateAndNames.Add(dateAndName);
             }
             return new ObservableCollection<DateAndName>(dateAndNames);
+        }
+
+        //Need to do the task below before this
+        //(Create a method specifically for marking attendance and also checking if there are changes and update the page when necessary)
+        async Task<ObservableCollection<DateAndName>> SearchSpecificName(String Name)
+        {
+            return null;
         }
     }
 }

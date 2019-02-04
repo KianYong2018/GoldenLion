@@ -26,8 +26,7 @@ namespace GoldenLion
 
         async void ButtonTestPayment_Clicked(object sender, EventArgs e)
         {
-            IEnumerable<UserAccount> userAccounts = await UserAccountManager.GetUserBasedOnRoleAsync(false, null);
-            await Navigation.PushAsync(new PaymentPage(userAccounts));
+            await Navigation.PushAsync(new PaymentPage());
         }
 
         public void ButtonCalendar_Clicked(object sender, EventArgs e)
@@ -35,7 +34,7 @@ namespace GoldenLion
             DependencyService.Get<ICalendar>().DisplayCalendar(); //Going into Xamarin.Android
         }
 
-        async void ButtonTestLogout_Clicked(object sender, EventArgs e)
+        async void ButtonLogout_Clicked(object sender, EventArgs e)
         {
             IEnumerable<UserAccount> DeviceType = await UserAccountManager.GetUserAccountAsync(Application.Current.Properties["UserName"].ToString());
             UserAccount LogoutUser = DeviceType.ElementAtOrDefault(0);
@@ -48,7 +47,7 @@ namespace GoldenLion
                 LogoutUser.UWP = false;
             }
             await UserAccountManager.SaveTaskAsync(LogoutUser);
-            await Navigation.PushAsync(new MainPage());
+            await Navigation.PopAsync();
         }
 
         async void ButtonDisplay_Clicked(object sender, EventArgs e)

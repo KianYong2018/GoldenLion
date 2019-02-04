@@ -4,7 +4,7 @@
              x:Class="GoldenLion.Display">
     <ContentPage.Content>
         <StackLayout>
-            <SearchBar Placeholder="Date or Name" />
+            <SearchBar x:Name="SearchBar" SearchButtonPressed="SearchBar_SearchButtonPressed"/>
             <ListView x:Name="listViewDisplay">
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -6,15 +6,15 @@
         <StackLayout>
             <StackLayout Orientation="Horizontal">
                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                    <Button x:Name="ButtonAttendance" Text="Attendance" Clicked="ButtonAttendance_Clicked"/>
+                    <Button x:Name="ButtonAttendance" Text="Attendance" Clicked="ButtonAttendance_Clicked" IsEnabled="False" IsVisible="False"/>
                 </StackLayout>
                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
                     <Button x:Name="ButtonTestPayment" Text="Payment" Clicked="ButtonTestPayment_Clicked"/>
                 </StackLayout>
             </StackLayout>
-            <Button x:Name="ButtonTakePhoto" Text="Take Photo" />
-            <Button x:Name="ButtonCalendar" Text="Calendar" Clicked="ButtonCalendar_Clicked" />
-            <Button x:Name="ButtonTestLogout" Text="Test Logout" Clicked="ButtonTestLogout_Clicked" />
+            <Button x:Name="ButtonTakePhoto" Text="Take Photo" IsEnabled="False" IsVisible="False"/>
+            <Button x:Name="ButtonCalendar" Text="Calendar" Clicked="ButtonCalendar_Clicked" IsEnabled="False" IsVisible="False"/>
+            <Button x:Name="ButtonLogout" Text="Logout" Clicked="ButtonLogout_Clicked" />
             <Button x:Name="ButtonDisplay" Text="Display" Clicked="ButtonDisplay_Clicked" />
         </StackLayout>
     </ContentPage.Content>
