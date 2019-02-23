@@ -106,10 +106,7 @@ namespace GoldenLion.Managers
                 }
                 foreach(CalendarAttendance a in attendances)
                 {
-                    if (verify == true)
-                    {
-                        await SaveTaskAsync(a);
-                    }
+                    await SaveTaskAsync(a);
                 }
                 return verify;
             }

@@ -5,7 +5,7 @@
              x:Class="GoldenLion.PaymentPage">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Update" Clicked="Button_Clicked" />
+            <Button Text="View" Clicked="Button_Clicked" />
             <ListView x:Name="listView" ItemsSource="{Binding Users}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

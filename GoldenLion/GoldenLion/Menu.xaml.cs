@@ -21,7 +21,7 @@ namespace GoldenLion
 
         async void ButtonAttendance_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new AttendancePage());
+            await Navigation.PushAsync(new Attendance());
         }
 
         async void ButtonTestPayment_Clicked(object sender, EventArgs e)

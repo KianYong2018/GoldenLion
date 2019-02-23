@@ -56,7 +56,7 @@ namespace GoldenLion
             }
             else
             {
-                var result = await DisplayAlert("Success", "Attendance has been successfully marked.", "Yes", "No");
+                var result = await DisplayAlert("Success", "Attendance has been successfully marked. Do you want to View them?", "Yes", "No");
                 if(result == true)
                 {
                     await Navigation.PushAsync(new Display());

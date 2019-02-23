@@ -15,7 +15,6 @@ namespace GoldenLion
 	public partial class SignUp : ContentPage
 	{
         UserAccountManager manager;
-
 		public SignUp ()
 		{
             InitializeComponent ();
